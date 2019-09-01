@@ -70,7 +70,7 @@ void FindFeatureMatches(const Mat &image_l,
 
 	vector< vector<DMatch> > matches;
 	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create("BruteForce"); 
-	matcher->knnMatch ( descriptors_l, descriptors_r, matches,5);
+	matcher->knnMatch ( descriptors_l, descriptors_r, matches,6);
 	Mat outimg1;
 
 	good_matches.reserve(matches.size());  
@@ -139,7 +139,7 @@ int main(int argc, char **argv){
   	int fontFace = FONT_HERSHEY_PLAIN;
   	double fontScale = 1;
   	int thickness = 1;  
-  	cv::Point textOrg(10, 60);
+  	cv::Point textOrg(10, 50);
 
 	// path for the images
 	string path   = "/home/aun/Downloads/data_odometry_gray/dataset/sequences/00/image_0/";
@@ -154,13 +154,16 @@ int main(int argc, char **argv){
   	// cout<<number_images<<endl;
 
  	
-  	double focal = 521;
-  	Point2d pp(325.1, 249.7);
+  	// double focal = 521;
+  	// Point2d pp(325.1, 249.7);
+
+	double focal = 718.8560;
+  	cv::Point2d pp(607.1928, 185.2157);
 
   	Mat image_curr, image_next;
   	Mat  cum_R, cum_t;
   	Mat  R, t;
-  	Mat traj = Mat::zeros(800, 800, CV_8UC3);
+  	Mat traj = Mat::zeros(1000, 1000, CV_8UC3);
 
   	// iterate over the images and find the transformations, then draw the path.
 	for (int image_number = 0; image_number < number_images-1; image_number++){
@@ -219,12 +222,12 @@ int main(int argc, char **argv){
   		cout<<"t:  "<<cum_t<<endl;
     	// t = t + scale*(R*t);
      //  	R = R*R;
-  		int x = int(cum_t.at<double>(0)) + 400;
-    	int y = int(cum_t.at<double>(2)) + 150;
+  		int x = int(cum_t.at<double>(0)) + 500;
+    	int y = int(cum_t.at<double>(2)) + 700;
     	// int z = int(cum_t.at<double>(1)) + 100;
     	circle(traj, Point(x, y) ,1, CV_RGB(255,0,0), 2);
 
-    	rectangle( traj, Point(10, 30), Point(550, 50), CV_RGB(0,0,0), FILLED);
+    	rectangle( traj, Point(10, 30), Point(800, 50), CV_RGB(0,0,0), FILLED);
     	sprintf(text, "Coordinates:    x = %02fm       y = %02fm           z = %02fm", cum_t.at<double>(0), cum_t.at<double>(1),cum_t.at<double>(2));
     	// printf(text);
     	string temp_text(text);
