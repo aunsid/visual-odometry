@@ -61,6 +61,7 @@ void FindFeatureMatches(const Mat &image_l,
 
 	Mat descriptors_l, descriptors_r;
 	Ptr<FastFeatureDetector> detector = FastFeatureDetector::create(50);
+	// Ptr<FeatureDetector> detector = ORB::create();
 	Ptr<DescriptorExtractor>descriptor = ORB::create();
 	detector->detect(image_l, p_l);
 	detector->detect(image_r, p_r);
@@ -68,33 +69,55 @@ void FindFeatureMatches(const Mat &image_l,
 	descriptor->compute(image_l, p_l, descriptors_l);
 	descriptor->compute(image_r, p_r, descriptors_r);
 
-	vector< vector<DMatch> > matches;
-	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create("BruteForce"); 
-	matcher->knnMatch ( descriptors_l, descriptors_r, matches,6);
-	Mat outimg1;
+	// vector< vector<DMatch> > matches;
+	// Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create("BruteForce"); 
+	// matcher->knnMatch ( descriptors_l, descriptors_r, matches,6);
+	// Mat outimg1;
 
-	good_matches.reserve(matches.size());  
-	// cout<<matches.size()<<endl;
-	double tresholdDist = 0.25 * sqrt(double(image_l.size().height*image_l.size().height + image_l.size().width*image_l.size().width));
+
+
+
+	// good_matches.reserve(matches.size());  
+	// // cout<<matches.size()<<endl;
+	// double tresholdDist = 0.5 * sqrt(double(image_l.size().height*image_l.size().height + image_l.size().width*image_l.size().width));
 	
-	for (size_t i = 0; i < matches.size(); ++i)
-	{ 
-    	for (int j = 0; j < matches[i].size(); j++)
-    	{
-        	Point2f from = p_l[matches[i][j].queryIdx].pt;
-        	Point2f to   = p_r[matches[i][j].trainIdx].pt;
+	// for (size_t i = 0; i < matches.size(); ++i)
+	// { 
+ //    	for (int j = 0; j < matches[i].size(); j++)
+ //    	{
+ //        	Point2f from = p_l[matches[i][j].queryIdx].pt;
+ //        	Point2f to   = p_r[matches[i][j].trainIdx].pt;
 
-        	//calculate local distance for each possible match
-        	double dist = sqrt((from.x - to.x) * (from.x - to.x) + (from.y - to.y) * (from.y - to.y));
+ //        	//calculate local distance for each possible match
+ //        	double dist = sqrt((from.x - to.x) * (from.x - to.x) + (from.y - to.y) * (from.y - to.y));
 
-        	//save as best match if local distance is in specified area and on same height
-        	if (dist < tresholdDist && abs(from.y-to.y)<5)
-        	{
-            	good_matches.push_back(matches[i][j]);
-            	j = matches[i].size();
-        	}
-    	}
-	}
+ //        	//save as best match if local distance is in specified area and on same height
+ //        	if (dist < tresholdDist && abs(from.y-to.y)<5)
+ //        	{
+ //            	good_matches.push_back(matches[i][j]);
+ //            	j = matches[i].size();
+ //        	}
+ //    	}
+	// }
+
+
+	vector<DMatch> match;
+	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create("BruteForce-Hamming");
+	matcher->match(descriptors_l, descriptors_r, match);
+
+	double min_dist = 10000, max_dist = 0;
+
+
+	for (int i = 0; i < descriptors_l.rows; i++) {
+    	double dist = match[i].distance;
+    	if (dist < min_dist) min_dist = dist;
+    	if (dist > max_dist) max_dist = dist;
+  	}
+  	for (int i = 0; i < descriptors_l.rows; i++) {
+    	if (match[i].distance <= max(2 * min_dist, 30.0)) {
+      		good_matches.push_back(match[i]);
+    }
+  }
 	
     // drawMatches( image_l, p_l, image_r, p_r, good_matches, outimg1);
     // // resizeWindow("ORB", 640,480);
@@ -227,7 +250,7 @@ int main(int argc, char **argv){
     	// int z = int(cum_t.at<double>(1)) + 100;
     	circle(traj, Point(x, y) ,1, CV_RGB(255,0,0), 2);
 
-    	rectangle( traj, Point(10, 30), Point(800, 50), CV_RGB(0,0,0), FILLED);
+    	rectangle( traj, Point(10, 30), Point(800, 60), CV_RGB(0,0,0), FILLED);
     	sprintf(text, "Coordinates:    x = %02fm       y = %02fm           z = %02fm", cum_t.at<double>(0), cum_t.at<double>(1),cum_t.at<double>(2));
     	// printf(text);
     	string temp_text(text);
