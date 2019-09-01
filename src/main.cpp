@@ -70,7 +70,7 @@ void FindFeatureMatches(const Mat &image_l,
 
 	vector< vector<DMatch> > matches;
 	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create("BruteForce"); 
-	matcher->knnMatch ( descriptors_l, descriptors_r, matches,500 );
+	matcher->knnMatch ( descriptors_l, descriptors_r, matches,5);
 	Mat outimg1;
 
 	good_matches.reserve(matches.size());  
@@ -97,8 +97,9 @@ void FindFeatureMatches(const Mat &image_l,
 	}
 	
     // drawMatches( image_l, p_l, image_r, p_r, good_matches, outimg1);
-    // resizeWindow("ORB", 640,480);
+    // // resizeWindow("ORB", 640,480);
     // imshow("ORB",outimg1);
+    // resizeWindow("ORB", 640,480);
 
     // waitKey(0);
 }
@@ -120,7 +121,7 @@ void PoseEstimation2d(const vector<KeyPoint>& keypoints_1,
 		points2.push_back(keypoints_2[matches[i].trainIdx].pt);
 	}
 
-	Mat essential_matrix = findEssentialMat(points1, points2, focal, pp, RANSAC, 0.999, 1.0);
+	Mat essential_matrix = findEssentialMat(points1, points2, focal, pp);
   	// cout << "essential_matrix is " << endl << essential_matrix << endl;
 	recoverPose(essential_matrix, points1, points2, R, t,focal, pp);
 }
@@ -153,8 +154,8 @@ int main(int argc, char **argv){
   	// cout<<number_images<<endl;
 
  	
-  	double focal = 718.8560;
-  	Point2d pp(607.1928, 185.2157);
+  	double focal = 521;
+  	Point2d pp(325.1, 249.7);
 
   	Mat image_curr, image_next;
   	Mat  cum_R, cum_t;
@@ -223,7 +224,7 @@ int main(int argc, char **argv){
     	// int z = int(cum_t.at<double>(1)) + 100;
     	circle(traj, Point(x, y) ,1, CV_RGB(255,0,0), 2);
 
-    	rectangle( traj, Point(10, 30), Point(550, 50), CV_RGB(0,0,0));
+    	rectangle( traj, Point(10, 30), Point(550, 50), CV_RGB(0,0,0), FILLED);
     	sprintf(text, "Coordinates:    x = %02fm       y = %02fm           z = %02fm", cum_t.at<double>(0), cum_t.at<double>(1),cum_t.at<double>(2));
     	// printf(text);
     	string temp_text(text);
