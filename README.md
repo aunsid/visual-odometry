@@ -1,5 +1,12 @@
 # visual-odometry
 
+<figure>
+ <img src="./images/map.png" width="640" alt="Combined Image" />
+ <figcaption>
+ <p></p> 
+ </figcaption>
+</figure>
+
 
 ## Algorithm
 ```
