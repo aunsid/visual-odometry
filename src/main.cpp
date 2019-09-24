@@ -69,36 +69,9 @@ void FindFeatureMatches(const Mat &image_l,
 	descriptor->compute(image_l, p_l, descriptors_l);
 	descriptor->compute(image_r, p_r, descriptors_r);
 
-	// vector< vector<DMatch> > matches;
-	// Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create("BruteForce"); 
-	// matcher->knnMatch ( descriptors_l, descriptors_r, matches,6);
+	
 	// Mat outimg1;
 
-
-
-
-	// good_matches.reserve(matches.size());  
-	// // cout<<matches.size()<<endl;
-	// double tresholdDist = 0.5 * sqrt(double(image_l.size().height*image_l.size().height + image_l.size().width*image_l.size().width));
-	
-	// for (size_t i = 0; i < matches.size(); ++i)
-	// { 
- //    	for (int j = 0; j < matches[i].size(); j++)
- //    	{
- //        	Point2f from = p_l[matches[i][j].queryIdx].pt;
- //        	Point2f to   = p_r[matches[i][j].trainIdx].pt;
-
- //        	//calculate local distance for each possible match
- //        	double dist = sqrt((from.x - to.x) * (from.x - to.x) + (from.y - to.y) * (from.y - to.y));
-
- //        	//save as best match if local distance is in specified area and on same height
- //        	if (dist < tresholdDist && abs(from.y-to.y)<5)
- //        	{
- //            	good_matches.push_back(matches[i][j]);
- //            	j = matches[i].size();
- //        	}
- //    	}
-	// }
 
 
 	vector<DMatch> match;
@@ -120,9 +93,10 @@ void FindFeatureMatches(const Mat &image_l,
   }
 	
     // drawMatches( image_l, p_l, image_r, p_r, good_matches, outimg1);
-    // // resizeWindow("ORB", 640,480);
+    // // cv::resize(outimg1, outimg1, cv::Size(), 0.75, 0.75);
     // imshow("ORB",outimg1);
-    // resizeWindow("ORB", 640,480);
+
+    // resizeWindow("ORB",10,5);
 
     // waitKey(0);
 }
