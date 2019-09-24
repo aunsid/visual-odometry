@@ -26,8 +26,8 @@ Visual Odomtery on KITTI Dataset.
 
 ## Dependencies
 
-* `OpenCV `
-* `CMake`
+* `OpenCV 4.0`
+* `CMake `
 
 ## Run Instructions
 ```
