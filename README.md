@@ -25,3 +25,9 @@ cd build && cmake ..
 make 
 cd ../bin && ./main
 ```
+
+## References
+```
+1.http://avisingh599.github.io/vision/monocular-vo/
+2.https://github.com/gaoxiang12/slambook-en
+```
