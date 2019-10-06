@@ -1,6 +1,6 @@
-# visual-odometry
+# monocular-visual-odometry
 
-Visual Odomtery on KITTI Dataset.
+Mocoular Visual Odomtery on KITTI Dataset using opencv 4.0 in C++
 
 
 
